@@ -27,7 +27,7 @@ export async function searchPokemon(query: string): Promise<Pokemon[]> {
   }
 }
 
-export async function getPokemonById(id: number): Promise<Pokemon | null> {
+export async function getPokemonById(id: string | number): Promise<Pokemon | null> {
   try {
     const response = await fetch(`${BASE_URL}/pokemon/${id}`);
     if (!response.ok) return null;

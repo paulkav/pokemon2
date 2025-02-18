@@ -1,14 +1,24 @@
 'use client';
 
 import { Pokemon } from '../types/pokemon';
+import { useRouter } from 'next/navigation';
 
 interface PokemonCardProps {
   pokemon: Pokemon;
 }
 
 export default function PokemonCard({ pokemon }: PokemonCardProps) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/pokemons/${pokemon.id}`);
+  };
+
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow text-gray-700">
+    <div 
+      onClick={handleClick}
+      className="bg-white/90 backdrop-blur-sm rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow text-gray-700 cursor-pointer"
+    >
       <div className="w-32 h-32 mx-auto">
         <img
           src={pokemon.sprites.front_default}
