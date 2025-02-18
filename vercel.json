@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "images": {
+    "domains": ["raw.githubusercontent.com"],
+    "sizes": [128, 256],
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "raw.githubusercontent.com",
+        "pathname": "/PokeAPI/sprites/**"
+      }
+    ]
+  }
+}

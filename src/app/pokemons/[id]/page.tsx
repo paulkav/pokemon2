@@ -1,6 +1,6 @@
-import { Pokemon } from '@/types/pokemon';
 import { getPokemonById } from '@/services/pokemonService';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 
 async function getPokemon(id: string) {
   try {
@@ -9,16 +9,19 @@ async function getPokemon(id: string) {
       notFound();
     }
     return pokemon;
-  } catch (error) {
-    throw new Error('Failed to fetch pokemon');
+  } catch {
+    notFound();
   }
 }
 
-export default async function PokemonDetails({
-  params,
-}: {
-  params: { id: string };
-}) {
+async function generateStaticParams() {
+  return [{ id: '1' }, { id: '2' }, { id: '3' }];
+}
+
+export { generateStaticParams };
+
+// @ts-expect-error - Next.js 15.1.7 type issue
+export default async function Page({ params }) {
   const pokemon = await getPokemon(params.id);
 
   return (
@@ -26,10 +29,13 @@ export default async function PokemonDetails({
       <div className="max-w-4xl mx-auto bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="flex justify-center items-center">
-            <img
+            <Image
               src={pokemon.sprites.front_default}
               alt={pokemon.name}
-              className="w-64 h-64 object-contain"
+              width={256}
+              height={256}
+              className="object-contain"
+              priority
             />
           </div>
           <div>

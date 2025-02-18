@@ -2,6 +2,7 @@
 
 import { Pokemon } from '../types/pokemon';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface PokemonCardProps {
   pokemon: Pokemon;
@@ -20,10 +21,13 @@ export default function PokemonCard({ pokemon }: PokemonCardProps) {
       className="bg-white/90 backdrop-blur-sm rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow text-gray-700 cursor-pointer"
     >
       <div className="w-32 h-32 mx-auto">
-        <img
+        <Image
           src={pokemon.sprites.front_default}
           alt={pokemon.name}
+          width={128}
+          height={128}
           className="w-full h-full object-contain"
+          priority
         />
       </div>
       <h2 className="text-xl font-bold text-center capitalize mt-2 text-gray-800">
