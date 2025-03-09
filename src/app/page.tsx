@@ -15,7 +15,7 @@ function SearchWrapper() {
   );
 }
 
-export default function Home() {
+function HomeContent() {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -71,5 +71,13 @@ export default function Home() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
