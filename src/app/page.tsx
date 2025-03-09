@@ -20,7 +20,7 @@ export default function Home({ searchParams }: PageProps) {
     async function loadPokemon() {
       try {
         setLoading(true);
-        const query = searchParams?.get('query');
+        const query = typeof searchParams?.query === 'string' ? searchParams.query : undefined;
         const data = query 
           ? await searchPokemon(query)
           : await getInitialPokemon();
