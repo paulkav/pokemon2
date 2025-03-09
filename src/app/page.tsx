@@ -4,12 +4,12 @@ import { Pokemon } from '@/types/pokemon';
 import { getInitialPokemon, searchPokemon } from '@/services/pokemonService';
 import PokemonCard from '@/components/PokemonCard';
 import Search from '@/components/Search';
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 function SearchSkeleton() {
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto" role="status" aria-label="Loading search...">
       <div className="h-12 bg-gray-200 animate-pulse rounded-lg"></div>
     </div>
   );
@@ -23,7 +23,7 @@ function SearchWrapper() {
   );
 }
 
-function LoadingSpinner({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
+function LoadingSpinner({ size = 'md', label = 'Loading...' }: { size?: 'sm' | 'md' | 'lg', label?: string }) {
   const sizeClasses = {
     sm: 'h-8 w-8 border-2',
     md: 'h-12 w-12 border-4',
@@ -31,20 +31,26 @@ function LoadingSpinner({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   };
 
   return (
-    <div className="flex justify-center my-8">
-      <div className={`animate-spin rounded-full border-gray-800 border-t-transparent ${sizeClasses[size]}`}></div>
+    <div className="flex flex-col items-center justify-center my-8" role="status" aria-label={label}>
+      <div className={`animate-spin rounded-full border-gray-800 border-t-transparent ${sizeClasses[size]}`} />
+      <span className="sr-only">{label}</span>
     </div>
   );
 }
 
-function ErrorMessage({ message }: { message: string }) {
+function ErrorMessage({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="text-red-500 text-center my-8 p-4 bg-red-50 rounded-lg border border-red-200 shadow-sm">
+    <div 
+      role="alert" 
+      className="text-red-500 text-center my-8 p-4 bg-red-50 rounded-lg border border-red-200 shadow-sm"
+      aria-live="assertive"
+    >
       <p className="font-medium">Error</p>
       <p className="mt-1">{message}</p>
       <button 
-        onClick={() => window.location.reload()}
-        className="mt-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-md transition-colors"
+        onClick={onRetry}
+        className="mt-2 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+        aria-label="Retry loading Pokemon"
       >
         Try Again
       </button>
@@ -54,7 +60,7 @@ function ErrorMessage({ message }: { message: string }) {
 
 function EmptyState({ query }: { query?: string | null }) {
   return (
-    <div className="col-span-full text-center py-12">
+    <div className="col-span-full text-center py-12" role="status">
       <div className="max-w-md mx-auto">
         <p className="text-gray-500 text-lg">
           {query 
@@ -66,6 +72,22 @@ function EmptyState({ query }: { query?: string | null }) {
   );
 }
 
+function PokemonGrid({ pokemon }: { pokemon: Pokemon[] }) {
+  return (
+    <div 
+      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      role="list"
+      aria-label="Pokemon list"
+    >
+      {pokemon.map((p) => (
+        <div key={p.id} role="listitem">
+          <PokemonCard pokemon={p} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function HomeContent() {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [error, setError] = useState('');
@@ -73,10 +95,26 @@ function HomeContent() {
   const searchParams = useSearchParams();
   const query = searchParams.get('query');
 
+  const loadPokemon = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const data = query 
+        ? await searchPokemon(query)
+        : await getInitialPokemon();
+      setPokemon(data);
+    } catch (e) {
+      setError('Failed to load Pokemon. Please try again.');
+      console.error('Error loading Pokemon:', e);
+    } finally {
+      setLoading(false);
+    }
+  }, [query]);
+
   useEffect(() => {
     let mounted = true;
 
-    async function loadPokemon() {
+    const load = async () => {
       try {
         setLoading(true);
         setError('');
@@ -96,14 +134,18 @@ function HomeContent() {
           setLoading(false);
         }
       }
-    }
+    };
 
-    loadPokemon();
+    load();
 
     return () => {
       mounted = false;
     };
   }, [query]);
+
+  const handleRetry = useCallback(() => {
+    loadPokemon();
+  }, [loadPokemon]);
 
   return (
     <main className="min-h-screen p-8 bg-gray-50">
@@ -117,19 +159,18 @@ function HomeContent() {
         </div>
         
         {error ? (
-          <ErrorMessage message={error} />
+          <ErrorMessage message={error} onRetry={handleRetry} />
         ) : loading ? (
-          <LoadingSpinner size="lg" />
+          <LoadingSpinner 
+            size="lg" 
+            label={query ? `Searching for "${query}"...` : 'Loading Pokemon...'}
+          />
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {pokemon.length > 0 ? (
-              pokemon.map((p) => (
-                <PokemonCard key={p.id} pokemon={p} />
-              ))
-            ) : (
-              <EmptyState query={query} />
-            )}
-          </div>
+          pokemon.length > 0 ? (
+            <PokemonGrid pokemon={pokemon} />
+          ) : (
+            <EmptyState query={query} />
+          )
         )}
       </div>
     </main>
@@ -138,19 +179,21 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <Suspense fallback={
-      <main className="min-h-screen p-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold text-center mb-8 text-gray-900">
-            Pokemon Explorer
-          </h1>
-          <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-            <SearchSkeleton />
+    <Suspense 
+      fallback={
+        <main className="min-h-screen p-8 bg-gray-50">
+          <div className="max-w-7xl mx-auto">
+            <h1 className="text-4xl font-bold text-center mb-8 text-gray-900">
+              Pokemon Explorer
+            </h1>
+            <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+              <SearchSkeleton />
+            </div>
+            <LoadingSpinner size="lg" label="Loading Pokemon Explorer..." />
           </div>
-          <LoadingSpinner size="lg" />
-        </div>
-      </main>
-    }>
+        </main>
+      }
+    >
       <HomeContent />
     </Suspense>
   );
