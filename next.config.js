@@ -8,8 +8,12 @@ module.exports = {
       },
       {
         protocol: 'https',
-        hostname: 'pokeapi.co',
+        hostname: 'assets.pokemon.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.pokemondb.net',
+      }
     ],
   },
 }
