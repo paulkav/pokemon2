@@ -5,17 +5,19 @@ import { getInitialPokemon, searchPokemon } from '@/services/pokemonService';
 import PokemonCard from '@/components/PokemonCard';
 import Search from '@/components/Search';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function Home() {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     async function loadPokemon() {
       try {
         setLoading(true);
-        const query = typeof searchParams?.query === 'string' ? searchParams.query : undefined;
+        const query = searchParams.get('query');
         const data = query 
           ? await searchPokemon(query)
           : await getInitialPokemon();
@@ -28,7 +30,7 @@ export default function Home() {
       }
     }
     loadPokemon();
-  }, []);
+  }, [searchParams]);
 
   return (
     <main className="min-h-screen p-8">
