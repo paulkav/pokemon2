@@ -4,8 +4,16 @@ import { Pokemon } from '@/types/pokemon';
 import { getInitialPokemon, searchPokemon } from '@/services/pokemonService';
 import PokemonCard from '@/components/PokemonCard';
 import Search from '@/components/Search';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+
+function SearchWrapper() {
+  return (
+    <Suspense fallback={<div>Loading search...</div>}>
+      <Search />
+    </Suspense>
+  );
+}
 
 export default function Home() {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
@@ -29,20 +37,27 @@ export default function Home() {
         setLoading(false);
       }
     }
+
     loadPokemon();
   }, [searchParams]);
+
+  if (error) {
+    return (
+      <main className="min-h-screen p-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-4xl font-bold text-center mb-8">Pokemon Explorer</h1>
+          <SearchWrapper />
+          <div className="text-red-500 text-center mb-8">{error}</div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8">Pokemon Explorer</h1>
-        
-        <Search />
-
-        {error && (
-          <div className="text-red-500 text-center mb-8">{error}</div>
-        )}
-
+        <SearchWrapper />
         {loading ? (
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-8 w-8 border-4 border-gray-800 border-t-transparent"></div>
