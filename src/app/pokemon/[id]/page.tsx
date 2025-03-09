@@ -6,6 +6,13 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+interface PageProps {
+  params: {
+    id: string;
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
 const formatHeight = (height: number) => {
   const meters = height / 10;
   const feet = Math.floor(meters * 3.28084);
@@ -19,7 +26,7 @@ const formatWeight = (weight: number) => {
   return `${kg.toFixed(1)}kg (${lbs.toFixed(1)}lbs)`;
 };
 
-export default function PokemonDetailPage({ params }: { params: { id: string } }) {
+export default function PokemonDetailPage({ params, searchParams }: PageProps) {
   const [pokemon, setPokemon] = useState<Pokemon | null>(null);
   const [loading, setLoading] = useState(true);
 
