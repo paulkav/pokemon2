@@ -7,8 +7,12 @@ import Search from '@/components/Search';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-export default function Home() {
-  const searchParams = useSearchParams();
+interface PageProps {
+  params: {};
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default function Home({ params, searchParams }: PageProps) {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);

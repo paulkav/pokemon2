@@ -5,7 +5,12 @@ import { Pokemon } from '@/types/pokemon';
 import PokemonSelector from '@/components/PokemonSelector';
 import PokemonStats from '@/components/PokemonStats';
 
-export default function ComparePage() {
+interface PageProps {
+  params: {};
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default function ComparePage({ params, searchParams }: PageProps) {
   const [leftPokemon, setLeftPokemon] = useState<Pokemon | null>(null);
   const [rightPokemon, setRightPokemon] = useState<Pokemon | null>(null);
   const [isComparing, setIsComparing] = useState(false);

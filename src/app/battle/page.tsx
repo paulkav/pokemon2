@@ -6,7 +6,12 @@ import PokemonStats from '@/components/PokemonStats';
 import { Pokemon } from '@/types/pokemon';
 import BattleAnimation from '@/components/BattleAnimation';
 
-export default function BattlePage() {
+interface PageProps {
+  params: {};
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default function BattlePage({ params, searchParams }: PageProps) {
   const [pokemon1, setPokemon1] = useState<Pokemon | null>(null);
   const [pokemon2, setPokemon2] = useState<Pokemon | null>(null);
   const [battleResult, setBattleResult] = useState<string>('');
