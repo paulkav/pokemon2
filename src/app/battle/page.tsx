@@ -7,10 +7,9 @@ import { Pokemon } from '@/types/pokemon';
 import BattleAnimation from '@/components/BattleAnimation';
 
 type PageProps = {
-  searchParams?: Record<string, string | string[] | undefined>;
 };
 
-export default function BattlePage({ searchParams }: PageProps) {
+export default function BattlePage() {
   const [pokemon1, setPokemon1] = useState<Pokemon | null>(null);
   const [pokemon2, setPokemon2] = useState<Pokemon | null>(null);
   const [battleResult, setBattleResult] = useState<string>('');

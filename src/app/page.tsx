@@ -4,7 +4,6 @@ import { Pokemon } from '@/types/pokemon';
 import { getInitialPokemon, searchPokemon } from '@/services/pokemonService';
 import PokemonCard from '@/components/PokemonCard';
 import Search from '@/components/Search';
-import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 type PageProps = {
