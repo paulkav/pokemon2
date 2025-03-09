@@ -9,9 +9,19 @@ import { useSearchParams } from 'next/navigation';
 
 function SearchWrapper() {
   return (
-    <Suspense fallback={<div>Loading search...</div>}>
+    <Suspense fallback={<div className="w-full max-w-4xl mx-auto">
+      <div className="h-12 bg-gray-200 animate-pulse rounded-lg"></div>
+    </div>}>
       <Search />
     </Suspense>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <div className="flex justify-center my-8">
+      <div className="animate-spin rounded-full h-12 w-12 border-4 border-gray-800 border-t-transparent"></div>
+    </div>
   );
 }
 
@@ -25,6 +35,7 @@ function HomeContent() {
     async function loadPokemon() {
       try {
         setLoading(true);
+        setError('');
         const query = searchParams.get('query');
         const data = query 
           ? await searchPokemon(query)
@@ -41,32 +52,31 @@ function HomeContent() {
     loadPokemon();
   }, [searchParams]);
 
-  if (error) {
-    return (
-      <main className="min-h-screen p-8">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-4xl font-bold text-center mb-8">Pokemon Explorer</h1>
-          <SearchWrapper />
-          <div className="text-red-500 text-center mb-8">{error}</div>
-        </div>
-      </main>
-    );
-  }
-
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8">Pokemon Explorer</h1>
         <SearchWrapper />
-        {loading ? (
-          <div className="flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-4 border-gray-800 border-t-transparent"></div>
+        
+        {error && (
+          <div className="text-red-500 text-center my-8 p-4 bg-red-50 rounded-lg border border-red-200">
+            {error}
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {pokemon.map((p) => (
-              <PokemonCard key={p.id} pokemon={p} />
-            ))}
+        )}
+
+        {loading ? (
+          <LoadingSpinner />
+        ) : !error && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
+            {pokemon.length > 0 ? (
+              pokemon.map((p) => (
+                <PokemonCard key={p.id} pokemon={p} />
+              ))
+            ) : (
+              <div className="col-span-full text-center text-gray-500">
+                No Pokemon found. Try a different search term.
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -76,7 +86,7 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSpinner />}>
       <HomeContent />
     </Suspense>
   );
