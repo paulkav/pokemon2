@@ -31,7 +31,7 @@ export default function PokemonDetailPage({ params }: { params: { id: string } }
           notFound();
         }
         setPokemon(data);
-      } catch (err) {
+      } catch {
         notFound();
       } finally {
         setLoading(false);
