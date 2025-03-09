@@ -5,9 +5,6 @@ import PokemonSelector from '@/components/PokemonSelector';
 import PokemonStats from '@/components/PokemonStats';
 import { Pokemon } from '@/types/pokemon';
 
-type PageProps = {
-};
-
 export default function ComparePage() {
   const [pokemon1, setPokemon1] = useState<Pokemon | null>(null);
   const [pokemon2, setPokemon2] = useState<Pokemon | null>(null);

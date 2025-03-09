@@ -6,9 +6,6 @@ import PokemonStats from '@/components/PokemonStats';
 import { Pokemon } from '@/types/pokemon';
 import BattleAnimation from '@/components/BattleAnimation';
 
-type PageProps = {
-};
-
 export default function BattlePage() {
   const [pokemon1, setPokemon1] = useState<Pokemon | null>(null);
   const [pokemon2, setPokemon2] = useState<Pokemon | null>(null);

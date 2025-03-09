@@ -6,11 +6,7 @@ import PokemonCard from '@/components/PokemonCard';
 import Search from '@/components/Search';
 import { useEffect, useState } from 'react';
 
-type PageProps = {
-  searchParams?: Record<string, string | string[] | undefined>;
-};
-
-export default function Home({ searchParams }: PageProps) {
+export default function Home() {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -32,7 +28,7 @@ export default function Home({ searchParams }: PageProps) {
       }
     }
     loadPokemon();
-  }, [searchParams]);
+  }, []);
 
   return (
     <main className="min-h-screen p-8">
