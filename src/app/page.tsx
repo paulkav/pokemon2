@@ -7,12 +7,11 @@ import Search from '@/components/Search';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-interface PageProps {
-  params: {};
-  searchParams: { [key: string]: string | string[] | undefined };
-}
+type PageProps = {
+  searchParams?: Record<string, string | string[] | undefined>;
+};
 
-export default function Home({ params, searchParams }: PageProps) {
+export default function Home({ searchParams }: PageProps) {
   const [pokemon, setPokemon] = useState<Pokemon[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -21,7 +20,7 @@ export default function Home({ params, searchParams }: PageProps) {
     async function loadPokemon() {
       try {
         setLoading(true);
-        const query = searchParams.get('query');
+        const query = searchParams?.get('query');
         const data = query 
           ? await searchPokemon(query)
           : await getInitialPokemon();
