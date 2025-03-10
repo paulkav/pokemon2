@@ -74,16 +74,18 @@ function EmptyState({ query }: { query?: string | null }) {
 
 function PokemonGrid({ pokemon }: { pokemon: Pokemon[] }) {
   return (
-    <div 
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-      role="list"
-      aria-label="Pokemon list"
-    >
-      {pokemon.map((p) => (
-        <div key={p.id} role="listitem">
-          <PokemonCard pokemon={p} />
-        </div>
-      ))}
+    <div className="container mx-auto px-4">
+      <div 
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+        role="list"
+        aria-label="Pokemon list"
+      >
+        {pokemon.map((p) => (
+          <div key={p.id} role="listitem" className="w-full">
+            <PokemonCard pokemon={p} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -148,8 +150,8 @@ function HomeContent() {
   }, [loadPokemon]);
 
   return (
-    <main className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
+    <main className="min-h-screen py-8 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4">
         <h1 className="text-4xl font-bold text-center mb-8 text-gray-900">
           Pokemon Explorer
         </h1>

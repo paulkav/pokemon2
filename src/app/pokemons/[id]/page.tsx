@@ -20,8 +20,15 @@ async function generateStaticParams() {
 
 export { generateStaticParams };
 
-// @ts-expect-error - Next.js 15.1.7 type issue
-export default async function Page({ params }) {
+interface PageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default async function Page(props: PageProps) {
+  
+  const params = await props.params;
   const pokemon = await getPokemon(params.id);
 
   return (

@@ -2,30 +2,30 @@
 
 const NavBar = () => {
   return (
-    <nav style={{ backgroundColor: '#1f2937', padding: '1rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1200px', margin: '0 auto' }}>
+    <nav className="bg-gray-800 py-4">
+      <div className="flex justify-between items-center max-w-7xl mx-auto px-4">
         <a 
           href="http://localhost:3000" 
-          style={{ color: 'white', textDecoration: 'none', fontSize: '1.25rem', fontWeight: 'bold' }}
+          className="text-white no-underline text-xl font-bold"
         >
           Pokemon Lookup
         </a>
         <div>
           <a 
             href="http://localhost:3000" 
-            style={{ color: 'white', textDecoration: 'none', marginRight: '1rem', padding: '0.5rem 1rem' }}
+            className="text-white no-underline mr-4 px-4 py-2"
           >
             Home
           </a>
           <a 
             href="http://localhost:3000/compare" 
-            style={{ color: 'white', textDecoration: 'none', marginRight: '1rem', padding: '0.5rem 1rem' }}
+            className="text-white no-underline mr-4 px-4 py-2"
           >
             Compare
           </a>
           <a 
             href="http://localhost:3000/battle" 
-            style={{ color: 'white', textDecoration: 'none', padding: '0.5rem 1rem' }}
+            className="text-white no-underline px-4 py-2"
           >
             Battle
           </a>

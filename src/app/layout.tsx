@@ -1,11 +1,10 @@
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
-import type { Metadata } from "next/dist/lib/metadata/types/metadata-interface";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'Pokemon Lookup',
   description: 'Search and view Pokemon information',
 };
@@ -17,11 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className} style={{ margin: 0, padding: 0 }}>
-        <div style={{ position: 'relative', zIndex: 10 }}>
+      <body className={`m-0 p-0`}>
+        <div className="relative z-10">
           <NavBar />
         </div>
-        <main style={{ position: 'relative', zIndex: 1 }}>
+        <main className="relative z-1">
           {children}
         </main>
       </body>
