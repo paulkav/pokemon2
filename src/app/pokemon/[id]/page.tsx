@@ -9,7 +9,12 @@ async function getData(id: string): Promise<Pokemon> {
   return res.json();
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function Page(props: PageProps) {
+  const params = await props.params;
   const pokemon = await getData(params.id);
   return <PokemonDetail pokemon={pokemon} />;
 }
